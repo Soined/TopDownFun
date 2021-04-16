@@ -19,11 +19,17 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        fireAbility.Setup(this);
     }
 
     private void FixedUpdate()
     {
         Move();
+    }
+
+    private void Update()
+    {
+        fireAbility.Update();
     }
 
     private void Move()

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PlayerAbility : MonoBehaviour
+
+public abstract class PlayerAbility : ScriptableObject
 {
     protected PlayerController playerController;
 
@@ -15,12 +16,12 @@ public abstract class PlayerAbility : MonoBehaviour
     public bool IsActive { get => isActive; }
     private bool isActive = false;
 
-    private void Start()
+    public void Setup(PlayerController controller)
     {
-        playerController = GetComponent<PlayerController>();
+        playerController = controller;
     }
 
-    private void Update()
+    public void Update()
     {
         if(IsOnCooldown)
         {
@@ -60,6 +61,7 @@ public abstract class PlayerAbility : MonoBehaviour
     protected void OnAbilityEnded()
     {
         _cooldown = cooldown;
+        isActive = false;
     }
 
 
