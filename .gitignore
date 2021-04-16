@@ -51,13 +51,3 @@ sysinfo.txt
 
 # include meta files
 !*.*.meta
-
-# Crashlytics generated file
-crashlytics-build.properties
-Assets/Prefabs/SebWave_Dark_Small\.prefab\.meta~HEAD\.meta
-
-Assets/Prefabs/Teleporter/TeleportA\.prefab\.meta~HEAD\.meta
-
-Assets/Frank_Warrior\.meta
-
-Assets/Frank_Warrior/Assets\.meta
