@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 1
   damage: 1
-  missileSpeed: 5
+  missileSpeed: 1
   missileScale: 1
-  missile: {fileID: 48231092055979181, guid: e77f61840544eeb4883f3750eb48786b, type: 3}
+  missile: {fileID: 297375557, guid: e77f61840544eeb4883f3750eb48786b, type: 3}

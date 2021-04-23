@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     Vector2 currentMoveInput = Vector2.zero;
     public Vector2 CurrentMoveInput { get => currentMoveInput; }
@@ -79,6 +79,11 @@ public class PlayerController : MonoBehaviour
         {
             dashAbility.OnButtonReleased();
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        //Schaden bekommen
     }
     #endregion
 }

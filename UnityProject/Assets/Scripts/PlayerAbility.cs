@@ -33,9 +33,8 @@ public abstract class PlayerAbility : ScriptableObject
 
     public void OnButtonPressed()
     {
-        if (IsOnCooldown)
+        if (IsOnCooldown || isActive)
         {
-            Debug.Log($"Ability on cooldown: {this.name} for {_cooldown} seconds");
             return;
         }
 
