@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81795903f3238a14e924f711bcf62f39, type: 3}
-  m_Name: FireBall
+  m_Script: {fileID: 11500000, guid: f3715f0f5c982454a9ad4550d09e2b73, type: 3}
+  m_Name: DashAbility
   m_EditorClassIdentifier: 
   cooldown: 1
-  damage: 1
-  missileSpeed: 5
-  missileScale: 1
-  missile: {fileID: 48231092055979181, guid: e77f61840544eeb4883f3750eb48786b, type: 3}
+  speed: 25
+  dashTime: 0.3

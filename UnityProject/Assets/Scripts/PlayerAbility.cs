@@ -25,18 +25,22 @@ public abstract class PlayerAbility : ScriptableObject
     {
         if(IsOnCooldown)
         {
-            _cooldown -= Time.deltaTime;
+            _cooldown -= Time.fixedDeltaTime;
         }
-
+        if(isActive)
         OnAbilityUpdate();
     }
 
     public void OnButtonPressed()
     {
-        if (IsOnCooldown) return;
+        if (IsOnCooldown)
+        {
+            Debug.Log($"Ability on cooldown: {this.name} for {_cooldown} seconds");
+            return;
+        }
 
-        OnAbilityStarted();
         isActive = true;
+        OnAbilityStarted(); 
     }
     public void OnButtonReleased()
     {

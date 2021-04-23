@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     Vector2 currentMoveInput = Vector2.zero;
+    public Vector2 CurrentMoveInput { get => currentMoveInput; }
 
     public float moveSpeed = 5f;
 
@@ -15,25 +16,33 @@ public class PlayerController : MonoBehaviour
     public PlayerAbility fireAbility;
     public PlayerAbility dashAbility;
 
+    public bool canMove = true;
+
 
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         fireAbility.Setup(this);
+        dashAbility.Setup(this);
     }
 
     private void FixedUpdate()
     {
         Move();
+
+        fireAbility.Update();
+        dashAbility.Update();
     }
 
     private void Update()
     {
-        fireAbility.Update();
+
     }
 
     private void Move()
     {
+        if (!canMove) return;
+
         rigid.MovePosition(rigid.position + currentMoveInput * Time.fixedDeltaTime * moveSpeed);
     }
 
@@ -44,30 +53,31 @@ public class PlayerController : MonoBehaviour
     }
     public void PauseInput(InputAction.CallbackContext context)
     {
-        if(context.performed)
+        if (context.performed)
         {
             GameManager.Main.OnPause();
         }
     }
     public void FireInput(InputAction.CallbackContext context)
     {
-        if(context.started)
-        {
-        }
         if (context.performed)
         {
             fireAbility.OnButtonPressed();
         }
-        if(context.canceled)
+        if (context.canceled)
         {
-            fireAbility.OnButtonReleased(); 
+            fireAbility.OnButtonReleased();
         }
     }
     public void DashInput(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            //Firen
+            dashAbility.OnButtonPressed();
+        }
+        if (context.canceled)
+        {
+            dashAbility.OnButtonReleased();
         }
     }
     #endregion
