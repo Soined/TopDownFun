@@ -137,7 +137,7 @@ public class Dungeon : MonoBehaviour
                 newSpawnedRoom.upSpawned = true;
                 break;
             default:
-                Debug.LogWarning("I dont know these direction");
+                Debug.LogWarning("I dont know this direction");
                 break;
         }
     }
