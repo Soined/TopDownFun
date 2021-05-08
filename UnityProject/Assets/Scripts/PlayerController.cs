@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour, IDamageable
 {
     Vector2 currentMoveInput = Vector2.zero;
+
+
     public Vector2 CurrentMoveInput { get => currentMoveInput; }
 
     public float moveSpeed = 5f;
@@ -36,7 +38,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Update()
     {
-
     }
 
     private void Move()
@@ -44,6 +45,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (!canMove) return;
 
         rigid.MovePosition(rigid.position + currentMoveInput * Time.fixedDeltaTime * moveSpeed);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Hit");
     }
 
     #region Input
@@ -86,4 +92,5 @@ public class PlayerController : MonoBehaviour, IDamageable
         //Schaden bekommen
     }
     #endregion
+
 }
