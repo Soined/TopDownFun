@@ -11,6 +11,12 @@ public class ADungeonManager : MonoBehaviour
     private List<ARoom> allRooms = new List<ARoom>();
 
     private List<ARoom> endRooms = new List<ARoom>();
+    [SerializeField]
+    // Room that contains the end of the Level
+    private ARoom finalRoom;
+
+    [SerializeField]
+    private int sidePathMaxLength = 3;
 
     [SerializeField]
     private ARoom startRoom;
@@ -45,7 +51,7 @@ public class ADungeonManager : MonoBehaviour
     private List<Direction> GetAllUnusedDirections(ARoom room)
     {
         List<Direction> directions = new List<Direction>();
-        foreach(ADoor d in room.doors)
+        foreach (ADoor d in room.doors)
         {
             if (d.isConnected) continue;
 
@@ -66,67 +72,162 @@ public class ADungeonManager : MonoBehaviour
     private ARoom GetNextMainRoom()
     {
         ARoom lastRoom = mainRouteRooms[mainRouteRooms.Count - 1];
-        
+
         ADoor nextDoor = GetAnyDoor(lastRoom);
 
-        List<ARoom> usableRooms = FilterRoomsForDirection(nextDoor.InverseDirection);
+
 
 
 
     }
-
-    private ARoom GetRandomSuitableRoom(ref List<ARoom> usableRooms)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="currentRoom"></param>
+    /// <param name="roomCounter">Sollte 1 sein, wenn zum ersten mal gecalled</param>
+    /// <param name="mainPath"></param>
+    /// <param name="maxRoomsForCurrentPath"></param>
+    /// <returns></returns>
+    private bool SpawnNextRoom(ARoom currentRoom, int roomCounter, bool mainPath, int maxRoomsForCurrentPath)
     {
-        
-        if(usableRooms.Count == 0)
+        //Endräume
+        if (roomCounter == maxRoomsForCurrentPath - 1) //currentRoom == vorletzter Raum
         {
-            return null;
+            for(int i = 0; i < currentRoom.doors.Length; i++)
+            { 
+                List<ARoom> usableRooms = FilterEndRoomsForDirection(currentRoom.doors[i].InverseDirection);
+
+                if (usableRooms.Count == 0) //Only wenn keine Door in irgendeinem Raum mit InverseDirection zu door gefunden werden kann.
+                {
+                    return false;
+                }
+                foreach (ARoom room in usableRooms)
+                {
+                    CheckForNextRoom(room, usableRooms, roomCounter, mainPath, maxRoomsForCurrentPath);
+                }
+            }
         }
+        else //Mittelräume
+        {
+            foreach (ADoor door in currentRoom.doors) //Alle Pfade von aktuellem Room öffnen
+            {
+                List<ARoom> usableRooms = FilterMiddleRoomsForDirection(door.InverseDirection);
+
+                if (usableRooms.Count == 0) //Only wenn keine Door in irgendeinem Raum mit InverseDirection zu door gefunden werden kann.
+                {
+                    return false;
+                }
+                int usableRoomsCount = usableRooms.Count;
+                for (int i = 0; i < usableRoomsCount; i++)
+                {
+                    if(CheckForNextRoom(ref usableRooms, roomCounter, mainPath, maxRoomsForCurrentPath))
+                    {
+                        //Der letzte Raum wurde gespawned
+                        return true;
+                    }
+                }
+                return false; //Mindestens eine der Türen vom aktuellen Raum kann nicht verbunden werden
+            }
+        }
+    }
+
+    bool CheckForNextRoom(ref List<ARoom> usableRooms, int roomCounter, bool mainPath, int maxRoomsForCurrentPath)
+    {
+        bool mainPathSet = false;
+        foreach (ADoor nextDoor in potentialNextRoom.doors) //TODO: Randomize door
+        {
+            ARoom spawnedRoom = SpawnRoom(nextDoor, endRoom: false, ref usableRooms);
+            if (spawnedRoom == null)
+            {
+                //Kein Raum konnte für die aktuelle Tür gefunden werden, also ist potentialNextRoom nicht verwendbar
+                return false;
+            }
+            else
+            {
+                //Wenn hier, dann potentialNextRoom => currentRoom
+                if (mainPath && !mainPathSet) //Wir bleiben auf MainPath
+                {
+                    mainPathSet = true;
+                    SpawnNextRoom(spawnedRoom, roomCounter + 1, mainPath, maxRoomsForCurrentPath);
+                }
+                else if (mainPath && mainPathSet) //Wir verlassen MainPath
+                {
+                    SpawnNextRoom(spawnedRoom, 0, false, random.Next(0, sidePathMaxLength));
+                }
+                else //Wir sind nicht MainPath
+                {
+                    SpawnNextRoom(spawnedRoom, roomCounter + 1, false, maxRoomsForCurrentPath);
+                }
+            }
+        }
+        return true; //Für alle Türen dieses Raumes konnte ein passender Raum gefunden werden
+    }
+    /* MainPathFunktion() -> SpawnNextRoom() macht Raum in Liste -> SpawnNextRoom() [bis path fertig]
+     * Wenn SpawnNextRoom() == false => Letzte Raum despawn und neu, ohne bereits despawntem Raum mit derselben Tür
+     * 
+     * 
+     */
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="oldDoor"></param>
+    /// <param name="currentPathCount"></param>
+    /// <param name="mainPath"></param>
+    /// <returns>false, wenn kein Raum an oldDoor verbunden werden kann</returns>
+    ARoom SpawnRoom(ADoor oldDoor, bool endRoom, ref List<ARoom> usableRooms)
+    {
+        //List<ARoom> usableRooms = endRoom ? FilterEndRoomsForDirection(oldDoor.InverseDirection)
+        //    : FilterMiddleRoomsForDirection(oldDoor.InverseDirection);
+
+
 
         ARoom nextRoom = usableRooms[random.Next(0, usableRooms.Count)];
 
-        //next room possible
-
-        usableRooms.Remove(nextRoom);
-
-        GetRandomSuitableRoom(ref usableRooms);
-    }
-    private bool RoomIsSuitable(ARoom nextRoom, ADoor oldDoor)
-    {
         Vector3 nextDoorPosition = oldDoor.GetConnectedDoorPosition();
 
         List<ADoor> suitableDoors = nextRoom.doors.Where(d => d.direction == oldDoor.InverseDirection).ToList();
 
         ARoom spawnedRoom = Instantiate(nextRoom, Vector3.zero, Quaternion.identity);
 
+        #region DoorLogik returned false, wenn keine Door von nextRoom an oldDoor angeknüpft werden kann
         ADoor suitableDoor = null;
         int suitableDoorsCount = suitableDoors.Count;
-        for(int i= 0; i < suitableDoorsCount;i++)
+        for (int i = 0; i < suitableDoorsCount; i++)
         {
             ADoor nextDoor = suitableDoors[random.Next(0, suitableDoors.Count)];
-            if (DoorIsSuitable(nextDoor, nextDoorPosition, spawnedRoom))
+            if (DoorIsSuitableToConnect(nextDoor, nextDoorPosition, spawnedRoom))
             {
                 suitableDoor = nextDoor;
                 break;
             }
         }
 
-        if(suitableDoor == null)
+        if (suitableDoor == null)
         {
             Destroy(spawnedRoom);
-            return false;
+            usableRooms.Remove(nextRoom);
+            return null;
         }
-        return true;
+        #endregion
+
+        return spawnedRoom;
     }
 
-    private bool DoorIsSuitable(ADoor nextDoor, Vector3 nextDoorPosition, ARoom nextRoom)
+    /// <summary>
+    /// If true the room can spawn, connecting itself to the previous room with the given door
+    /// </summary>
+    /// <param name="nextDoor"></param>
+    /// <param name="nextDoorPosition"></param>
+    /// <param name="nextRoom"></param>
+    /// <returns></returns>
+    private bool DoorIsSuitableToConnect(ADoor nextDoor, Vector3 nextDoorPosition, ARoom nextRoom)
     {
         nextRoom.transform.position = nextDoorPosition + nextDoor.GetRelativeRoomPosition();
 
         Collider2D[] results = { };
         ContactFilter2D filter = new ContactFilter2D();
         filter.layerMask = roomCheckLayer;
-
+        //int collidingCount = Physics2D.OverlapCollider(nextRoom.col, filter, results);
         if (nextRoom.col.OverlapCollider(filter, results) > 0)
         {
             return false;
@@ -137,9 +238,9 @@ public class ADungeonManager : MonoBehaviour
 
 
         return true;
-        
 
-        //int collidingCount = Physics2D.OverlapCollider(nextRoom.col, filter, results);
+
+
 
         //return !(collidingCount > 0);
     }
@@ -150,9 +251,13 @@ public class ADungeonManager : MonoBehaviour
     /// </summary>
     /// <param name="direction">Direction the Room must include</param>
     /// <returns></returns>
-    private List<ARoom> FilterRoomsForDirection(Direction direction)
+    private List<ARoom> FilterMiddleRoomsForDirection(Direction direction)
     {
         return allRooms.Where(r => r.GetAllDirections().Contains(direction)).ToList();
+    }
+    private List<ARoom> FilterEndRoomsForDirection(Direction direction)
+    {
+        return endRooms.Where(r => r.GetAllDirections().Contains(direction)).ToList();
     }
 
 
