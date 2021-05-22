@@ -6,9 +6,15 @@ public class ADoor : MonoBehaviour
 {
     public Direction direction;
 
+    public ADoor connectedDoor = null;
+
+    public ARoom Room { get => GetComponentInParent<ARoom>(); }
+
+    public Vector3 LocalPosition { get => transform.localPosition; }
+
     public Direction InverseDirection { get
         {
-            switch(direction)
+            switch (direction)
             {
                 case Direction.Up:
                     return Direction.Down;
@@ -23,8 +29,6 @@ public class ADoor : MonoBehaviour
             }
         } }
 
-    public bool isConnected = false;
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Nächster Raum
@@ -35,13 +39,13 @@ public class ADoor : MonoBehaviour
         switch(direction)
         {
             case Direction.Left:
-                return new Vector2(transform.position.x, transform.position.y) + Vector2.left;
+                return new Vector2(transform.position.x, transform.position.y) + Vector2.left * 10f;
             case Direction.Right:
-                return new Vector2(transform.position.x, transform.position.y) + Vector2.right;
+                return new Vector2(transform.position.x, transform.position.y) + Vector2.right * 10f;
             case Direction.Up:
-                return new Vector2(transform.position.x, transform.position.y) + Vector2.up;
+                return new Vector2(transform.position.x, transform.position.y) + Vector2.up * 10f;
             case Direction.Down:
-                return new Vector2(transform.position.x, transform.position.y) + Vector2.down;
+                return new Vector2(transform.position.x, transform.position.y) + Vector2.down * 10f;
             default:
                 return Vector2.zero;
         }
@@ -50,10 +54,6 @@ public class ADoor : MonoBehaviour
     /// Vector3 of this door to the center of its room
     /// </summary>
     /// <returns></returns>
-    public Vector3 GetRelativeRoomPosition()
-    {
-        return -transform.localPosition;
-    }
 
 
 }

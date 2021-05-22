@@ -7,8 +7,10 @@ public class ARoom : MonoBehaviour
 {
     public ADoor[] doors;
     public Collider2D col;
+    public ADoor firstConnectedDoor;
+    public bool isMainPath = false;
 
-    private void Start()
+    public void Awake()
     {
         col = GetComponent<Collider2D>();
     }

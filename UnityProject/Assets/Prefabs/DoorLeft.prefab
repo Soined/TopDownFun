@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3321424437120696170}
   - component: {fileID: 1450766414135052999}
-  - component: {fileID: 4918260032900650510}
   - component: {fileID: 5207307053393345865}
+  - component: {fileID: 7321949304823428845}
   m_Layer: 11
   m_Name: DoorLeft
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 9091313770431259918}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -19.46, y: 0.32, z: 0}
-  m_LocalScale: {x: 0.730113, y: 1.0112187, z: 1.6666665}
+  m_LocalScale: {x: 0.7, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -85,19 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4918260032900650510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9091313770431259918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04fd5b1a3f1fae149a09ce965847fe60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openDirection: 1
 --- !u!61 &5207307053393345865
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -124,3 +111,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.3, y: 5.2}
   m_EdgeRadius: 0
+--- !u!114 &7321949304823428845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9091313770431259918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cd5a3a585991e4bb9cdb43520a70dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 0
+  connectedDoor: {fileID: 0}

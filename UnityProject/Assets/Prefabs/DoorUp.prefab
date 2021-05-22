@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 182948359299431362}
   - component: {fileID: 4085837024177639023}
-  - component: {fileID: 7552760930579403430}
   - component: {fileID: 2017377002806676822}
+  - component: {fileID: 6899742639067338966}
   m_Layer: 11
   m_Name: DoorUp
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5961414371136840102}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.57, y: 12.89, z: 0}
-  m_LocalScale: {x: 0.730113, y: 1.0112187, z: 1.6666665}
+  m_LocalScale: {x: 0.7, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -85,19 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7552760930579403430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5961414371136840102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04fd5b1a3f1fae149a09ce965847fe60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openDirection: 2
 --- !u!61 &2017377002806676822
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -124,3 +111,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.3, y: 5.2}
   m_EdgeRadius: 0
+--- !u!114 &6899742639067338966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5961414371136840102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cd5a3a585991e4bb9cdb43520a70dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 2
+  connectedDoor: {fileID: 0}
